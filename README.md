@@ -28,7 +28,7 @@ That's It!
 ###How it works
 
 * Nothing very high tech - when the module installs it creates a new template: code_tester and a new unpublished page: Code Tester.
-* When you click Run Code it creates a file in the assets/files/ID_of_Code_Tester_page/code_tester_code.php and writes your code to the file.
+* When you click Run Code it creates this file: assets/files/ID_of_Code_Tester_page/code_tester_code.php and writes your code to the file.
 * This file is included from the code_tester.php file and the code is run and the output processed.
 * Note that I am using ob_start(); include; $out = ob_get_clean(); so that this will work with a single file templating approach like main.inc
 
