@@ -33,3 +33,4 @@ That's It!
 * Note that I am using ob_start(); include; $out = ob_get_clean(); so that this will work with a single file templating approach like main.inc
 
 ###Forum
+http://processwire.com/talk/topic/4689-code-tester-module/
