@@ -16,9 +16,11 @@
 
 include 'head.inc';
 
-/***************************************************************************************************/
-/*These lines are required - you can edit the rest of this template as needed to match the structure of your site*/
-/*For example, you may prefer using a single file approach like main.inc at the end, instead of the head.inc and foot.inc files*/
+/***************************************************************************************************
+* These lines are required - you can edit the rest of this template as needed to match the structure of your site
+* For example, you may prefer using a single file approach like main.inc at the end, instead of the head.inc and foot.inc files
+* Change the name of the $out variable as required, if you use something else in your main.inc file
+*/
 $out = '';
 ob_start();
 include $config->paths->files . ($config->pagefileSecure ? $config->pagefileSecurePathPrefix : null) . $pages->get("name=code-tester, template=code_tester, include=all")->id . '/code_tester_code.php';
