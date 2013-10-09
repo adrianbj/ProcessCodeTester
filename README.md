@@ -46,7 +46,7 @@ $out .= 'test';
 foreach($pages->find(selector) as $page) $out .= "<li>$page->name</li>";
 ```
 ```
-$page = $pages->get(selector); //This will populate the results frame with the page returned by the selector
+$p = $pages->get(selector); //This will populate the results frame with the page returned by the selector. You must use $p as the variable!
 ```
 ```
 foreach($pages->find(selector) as $p) $p->delete(); // Bulk delete pages matching the selector

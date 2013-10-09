@@ -24,7 +24,7 @@ include 'head.inc';
 $out = '';
 ob_start();
 include $config->paths->files . ($config->pagefileSecure ? $config->pagefileSecurePathPrefix : null) . $pages->get("name=code-tester, template=code_tester, include=all")->id . '/code_tester_code.php';
-if($page->id != $pages->get("name=code-tester, template=code_tester, include=all")->id) $session->redirect($page->url);
+if(isset($p) && $p->id != $pages->get("name=code-tester, template=code_tester, include=all")->id) $session->redirect($p->url);
 $out .= ob_get_clean();
 /***************************************************************************************************/
 
