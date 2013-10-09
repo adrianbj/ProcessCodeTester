@@ -27,7 +27,7 @@ class ProcessCodeTester extends Process {
 		return array(
 			'title'   => 'Code Tester',
 			'summary' => 'Test your code without editing a template file',
-			'version' => 2,
+			'version' => 3,
 			'author'  => 'Adrian Jones'
 		);
 	}

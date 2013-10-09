@@ -18,9 +18,9 @@ Then you can easily make code changes and run again.
 
 ###Installation
 
-Install as normal, then move the included file "code_tester.php" to your site's templates folder. 
-
-Depending on your sites template structure, you may want to edit this file. I have set it up using the head.inc and foot.inc approach that is used in PW's default profile. There are detailed instructions in the file to make it easy to modify as needed if you prefer using a single main.inc or other approach.
+* Install as normal, then move the included file "code_tester.php" to your site's templates folder.
+* Depending on your sites template structure, you may want to edit this file. I have set it up using the head.inc and foot.inc approach that is used in PW's default profile. There are detailed instructions in the file to make it easy to modify as needed if you prefer using a single main.inc or other approach.
+* Install the ACE Text Editor module if you want syntax highlighting.
 
 That's It!
 
@@ -30,7 +30,8 @@ That's It!
 * Nothing very high tech - when the module installs it creates a new template: code_tester and a new unpublished page: Code Tester.
 * When you click "Run Code" it creates/updates this file: /site/assets/files/ID_of_Code_Tester_page/code_tester_code.php and writes your code to the file.
 * This file is included from the code_tester.php file and the code is run and the output processed.
-* Note that I am using ob_start(); include; $out = ob_get_clean(); so that this will work with a single file templating approach like main.inc
+* Note that I am using ob_start(); include; $out = ob_get_clean(); so that this will work take the approach of populating variables that are output within a main/shared markup file like main.inc
+* If you want to use a variable other than $out in your test code, you will need to edit the code_tester.php file accordingly.
 
 ###Forum
 http://processwire.com/talk/topic/4689-code-tester-module/
