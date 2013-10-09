@@ -1,0 +1,196 @@
+<?php
+
+/**
+ * ProcessWire Code Tester
+ *
+ * ProcessCodeTester is an admin module to help test your code
+ * and explore the data and properties within pages.
+ *
+ * During installation this module creates a page in the ProcessWire admin to run itself from.
+ *
+ * @copyright Copyright (c) 2013, Adrian Jones
+ *
+ */
+
+class ProcessCodeTester extends Process {
+
+	// The name that will be used for the page this module creates
+	const pageName = 'code-tester';
+
+	// View (TemplateFile)
+	private $view;
+
+	// LanguageSupportFields instance for handling language alternate fields
+	// (Existence of this also determines if language support for fields is installed)
+	private $LanguageSupportFields;
+	// default language will be needed here and there with language alternate fields
+	private $DefaultLanguage;
+
+	/**
+	 * Return information about this module (required)
+	 *
+	 * @return array
+	 *
+	 */
+	static public function getModuleInfo() {
+		return array(
+			'title'   => 'Code Tester',
+			'summary' => 'Test your code without editing a template file',
+			'version' => 1,
+			'author'  => 'Adrian Jones'
+		);
+	}
+
+	/**
+	 * Initialization (called before any execute functions)
+	 *
+	 */
+	public function init() {
+		 // call parent's init (required)
+		parent::init();
+	}
+
+	/**
+	 * Main entry point
+	 *
+	 */
+	public function ___execute() {
+
+		$out = '';
+
+		if ($this->input->post->codetester_submit) $this->session->codetester_code = $this->input->post->codetester_code;
+
+		// Form for input fields
+		$form = $this->modules->get("InputfieldForm");
+		$form->attr('id', 'codetester_input_form');
+		$form->attr('method', 'post');
+		$form->attr('action', './');
+
+		// Textarea for selector string
+		$field = $this->modules->get("InputfieldTextarea");
+		$field->attr('id+name', 'codetester_code');
+		$field->attr('rows', 20);
+		$field->label = $this->_("WARNING!");
+		$field->description = $this->_("Any code entered here will be run on your site - there is no undo!\nMostly this should be harmless, but be aware of code that may manipulate your site's pages, fields, and templates using the API");
+		$field->notes = $this->_("Don't forget about the opening <?php");
+        if($this->session->codetester_code) $field->attr('value', $this->session->codetester_code);
+		$form->add($field);
+
+		// Submit button
+		$field = $this->modules->get("InputfieldButton");
+		$field->type = 'submit';
+		$field->name = 'codetester_submit';
+		$field->value = $this->_("Run code");
+		$field->columnWidth = 99;
+		$form->add($field);
+
+		$out .= $form->render();
+
+		//Check POST requests for submission
+		if ($this->input->post->codetester_submit) {
+
+			$testerPagePath = $this->config->paths->files . ($this->config->pagefileSecure ? $this->config->pagefileSecurePathPrefix : null) . $this->pages->get("name=code-tester, template=code_tester, include=all");
+
+			if (!file_exists($testerPagePath)) {
+				wireMkdir($testerPagePath);
+			}
+			$codeFilename = $testerPagePath . '/code_tester_code.php';
+			file_put_contents($codeFilename , $this->input->post->codetester_code);
+			$out .= "<br /><iframe frameBorder='0' width='100%' height='500px' src='/code-tester/'></iframe>";
+		}
+
+		return $out;
+
+	}
+
+
+	/**
+	 * Module installation
+	 *
+	 * Create a page under admin "Setup" page and attach this process to it
+	 *
+	 */
+	public function ___install() {
+
+		//Create template for test page
+        if(!$this->fieldgroups->code_tester) {
+            $fg = new Fieldgroup();
+            $fg->name = "code_tester";
+            $fg->add("title");
+            $fg->save();
+
+            $template = new Template();
+            $template->name = "code_tester";
+            $template->label = "Code Tester";
+            $template->fieldgroup = $fg;
+            $template->save();
+        }
+
+		//Create page for testing
+        if(!$this->pages->get("name=code-tester")->id) {
+            $tp = new Page();
+            $tp->parent = $this->pages->get(1);
+            $tp->template = $this->templates->code_tester;
+            $tp->title = "Code Tester";
+            $tp->status = Page::statusUnpublished;
+            $tp->of;
+            $tp->save();
+        }
+
+
+
+		// create the page our module will be assigned to
+		$page = new Page();
+		$page->template = 'admin';
+		$page->name = self::pageName;
+
+		// installs to the admin "Setup" menu
+		$page->parent = $this->pages->get($this->config->adminRootPageID)->child('name=setup');
+		// check if the page already exists (--> throw an exception if it does)
+		$existingPage = $page->parent->child("name={$page->name}, include=all");
+		if($existingPage->id) {
+			$this->error(sprintf($this->_("There is already a page at %s - maybe a previous installation?"), $existingPage->path));
+			throw new WireException($this->_("Page already exists"));
+		}
+		$page->process = $this;
+
+		// page title from module info
+		$info = self::getModuleInfo();
+		$page->title = $info['title'];
+
+		// save the page
+		$page->save();
+
+		// tell the user we created this page
+		$this->message(sprintf($this->_("Created page: %s - check it out!"), $page->path));
+	}
+
+	/**
+	 * Module uninstallation
+	 *
+	 * Remove the installed page
+	 *
+	 */
+	public function ___uninstall() {
+
+		$tp = $this->pages->get("name=code-tester, include=all");
+		if($tp->id) $tp->delete();
+
+		$tt = $this->templates->code_tester;
+		if($tt) $this->templates->delete($tt);
+
+		$tfg = $this->fieldgroups->code_tester;
+		if($tfg) $this->fieldgroups->delete($tfg);
+
+		// find the page we installed, locating it by the process field (which has the module ID)
+		// it would probably be sufficient just to locate by name, but this is just to be extra sure.
+		$moduleID = $this->modules->getModuleID($this);
+		$page = $this->pages->get("template=admin, process=$moduleID, name=" . self::pageName);
+
+		if($page->id) {
+			// if we found the page, let the user know and delete it
+			$this->message(sprintf($this->_("Deleted page: %s"), $page->path));
+			$page->delete();
+		}
+	}
+}
