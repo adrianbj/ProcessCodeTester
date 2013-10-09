@@ -27,7 +27,7 @@ class ProcessCodeTester extends Process {
 		return array(
 			'title'   => 'Code Tester',
 			'summary' => 'Test your code without editing a template file',
-			'version' => 3,
+			'version' => 4,
 			'author'  => 'Adrian Jones'
 		);
 	}
@@ -62,7 +62,7 @@ class ProcessCodeTester extends Process {
 		$field->attr('id+name', 'codetester_code');
 		$field->attr('rows', 20);
 		$field->label = $this->_("WARNING!");
-		$field->description = $this->_("Any code entered here will be run on your site - there is no undo!\nMostly this should be harmless, but be aware of code that may manipulate your site's pages, fields, and templates using the API");
+		$field->description = $this->_("Any code entered here will be run on your site - there is no undo!\nMostly this should be harmless, but be aware of code that may manipulate your site's pages, fields, and templates using the API\nFor content output, you can echo, or populate the ".'$out'." variable.");
 		$field->notes = $this->_("Don't forget about the opening <?php");
         if($this->session->codetester_code) $field->attr('value', $this->session->codetester_code);
 		$form->add($field);
