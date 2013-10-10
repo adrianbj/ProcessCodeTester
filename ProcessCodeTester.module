@@ -27,7 +27,7 @@ class ProcessCodeTester extends Process {
 		return array(
 			'title'   => 'Code Tester',
 			'summary' => 'Test your code without editing a template file',
-			'version' => 7,
+			'version' => 8,
 			'author'  => 'Adrian Jones'
 		);
 	}
@@ -113,6 +113,8 @@ class ProcessCodeTester extends Process {
             $template = new Template();
             $template->name = "code_tester";
             $template->label = "Code Tester";
+            $template->noChildren = 1;
+            $template->noParents = 1;
             $template->fieldgroup = $fg;
             $template->save();
         }
