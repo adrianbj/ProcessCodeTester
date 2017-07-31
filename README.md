@@ -1,6 +1,8 @@
 ProcessCodeTester
 =================
 
+#### This module is obsolete - please use the [Console panel from the Tracy Debugger module](https://processwire.com/blog/posts/introducing-tracy-debugger/#console-panel)
+
 A ProcessWire admin module to quickly test code without needing to edit templates
 
 Ok, this is really not very fancy, but I think it will come in quite handy - for me at least :)
@@ -16,7 +18,7 @@ Page will refresh with the code block still in editor, and with an iframe contai
 Then you can easily make code changes and run again.
 
 
-###Installation
+### Installation
 
 * Install as normal, then move the included file "code_tester.php" to your site's templates folder.
 * Depending on your sites template structure, you may want to edit this file. I have set it up using the head.inc and foot.inc approach that is used in PW's default profile. There are detailed instructions in the file to make it easy to modify as needed if you prefer using a single main.inc or other approach.
@@ -25,7 +27,7 @@ Then you can easily make code changes and run again.
 That's It!
 
 
-###How it works
+### How it works
 
 * Nothing very high tech - when the module installs it creates a new template: code_tester and a new unpublished page: Code Tester.
 * When you click "Run Code" it creates/updates this file: /site/assets/files/ID_of_Code_Tester_page/code_tester_code.php and writes your code to the file.
@@ -53,7 +55,7 @@ foreach($pages->find(selector) as $p) $p->delete(); // Bulk delete pages matchin
 ```
 So really it is more than a code tester - it can also be used as a way to test selectors and return the resulting page and also as a way of running admin maintenance scripts.
 
-###Forum
+### Forum
 http://processwire.com/talk/topic/4689-code-tester-module/
 
 
